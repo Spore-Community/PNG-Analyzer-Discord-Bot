@@ -29,11 +29,13 @@ namespace DiscordBot
         public Asset(string filePath)
         {
             // Extract data to XML file
-            if(!File.Exists(filePath+".xml")){
-                Process.Start("python2", "\"C:\\Users\\KyleN\\OneDrive\\Documents\\Spore Files\\PNG Decoder\\spore_decoder_by_ymgve_and_rick.py\" \""+filePath+"\"");
+            if (!File.Exists(filePath + ".xml"))
+            {
+                Process.Start("python2", "\"C:\\Users\\KyleN\\OneDrive\\Documents\\Spore Files\\PNG Decoder\\spore_decoder_by_ymgve_and_rick.py\" \"" + filePath + "\"");
 
                 int timer = 0;
-                while(!File.Exists(filePath+".xml") && timer<1000){
+                while (!File.Exists(filePath + ".xml") && timer < 1000)
+                {
                     Thread.Sleep(1);
                     timer++;
                 }
@@ -43,13 +45,13 @@ namespace DiscordBot
             // Read data from the file
             //try
             {
-                using (var reader = new StreamReader(filePath+".xml", Encoding.GetEncoding("iso-8859-1")))
+                using (var reader = new StreamReader(filePath + ".xml", Encoding.GetEncoding("iso-8859-1")))
                 {
                     var spore = ReadAssetData(reader, 5);
-                    if(!spore.Equals("spore")) Console.WriteLine("File is not a Spore asset!");
+                    if (!spore.Equals("spore")) Console.WriteLine("File is not a Spore asset!");
 
                     version = Convert.ToInt32(ReadAssetData(reader, 4));
-                    if(version!=5 && version!=6) Console.WriteLine("Asset version is unknown!");
+                    if (version != 5 && version != 6) Console.WriteLine("Asset version is unknown!");
 
                     typeId = ReadAssetData(reader, 8);
                     groupId = ReadAssetData(reader, 8);
@@ -58,7 +60,7 @@ namespace DiscordBot
 
                     assetId = Convert.ToInt64(ReadAssetData(reader, 16), 16);
 
-                    if(version==6)
+                    if (version == 6)
                     {
                         parentId = Convert.ToInt64(ReadAssetData(reader, 16), 16);
                     }
@@ -82,8 +84,8 @@ namespace DiscordBot
                     ReadAssetData(reader, 2);
                     // XML doc
                     var doc = reader.ReadToEnd();
-                    var partCountIndex = doc.IndexOf("blocks count=")+14;
-                    var endIndex = doc.IndexOf("\"", partCountIndex)-partCountIndex;
+                    var partCountIndex = doc.IndexOf("blocks count=") + 14;
+                    var endIndex = doc.IndexOf("\"", partCountIndex) - partCountIndex;
                     var partCountString = doc.Substring(partCountIndex, endIndex);
                     partCount = Convert.ToInt32(partCountString);
 
@@ -103,21 +105,21 @@ namespace DiscordBot
             return new string(data);
         }
 
-        public long Id {get => assetId;}
-        public string Name {get => name;}
-        public string Author {get => username;}
-        public long AuthorId {get => userId;}
-        public string Created {get => time;}
-        public string Description {get => desc;}
-        public string Tags {get => tags;}
+        public long Id { get => assetId; }
+        public string Name { get => name; }
+        public string Author { get => username; }
+        public long AuthorId { get => userId; }
+        public string Created { get => time; }
+        public string Description { get => desc; }
+        public string Tags { get => tags; }
         //public string Type {get;}
         //public string Subtype {get;}
         //public double Rating {get;}
-        public long Parent {get => parentId;}
+        public long Parent { get => parentId; }
 
-        public string SporeWebUrl {get => "http://www.spore.com/sporepedia#qry=sast-"+Id;}
+        public string SporeWebUrl { get => "http://www.spore.com/sporepedia#qry=sast-" + Id; }
 
-        public int PartCount {get => partCount;}
+        public int PartCount { get => partCount; }
 
         public void printInfo()
         {
@@ -126,10 +128,10 @@ namespace DiscordBot
 
         public string getInfo()
         {
-            var url = Id>0 ? SporeWebUrl : "*Unshared*";
-            var original = Parent>0 ? "*Edited Creation*\n" : "";
-            var desc = Description.Length>0 ? Description+"\n" : "";
-            var tags = Tags.Length>0 ? " - Tags: "+Tags : "";
+            var url = Id > 0 ? SporeWebUrl : "*Unshared*";
+            var original = Parent > 0 ? "*Edited Creation*\n" : "";
+            var desc = Description.Length > 0 ? Description + "\n" : "";
+            var tags = Tags.Length > 0 ? " - Tags: " + Tags : "";
 
             return $"**{Name}** by {Author}\n{desc}*{PartCount} parts{tags}*\n{original}{url}";
         }
@@ -144,9 +146,9 @@ namespace DiscordBot
             var assetInfo = "http://www.spore.com/rest/asset/" + Id;
             var creatureStats = "http://www.spore.com/rest/creature/" + Id;
 
-            var subId1 = Id.ToString().Substring(0,3);
-            var subId2 = Id.ToString().Substring(3,6);
-            var subId3 = Id.ToString().Substring(6,9);
+            var subId1 = Id.ToString().Substring(0, 3);
+            var subId2 = Id.ToString().Substring(3, 3);
+            var subId3 = Id.ToString().Substring(6, 3);
             var xmlModel = $"http://www.spore.com/static/model/{subId1}/{subId2}/{subId3}/{Id}.xml";
             var largePng = $"http://www.spore.com/static/image/{subId1}/{subId2}/{subId3}/{Id}_lrg.png";
             var smallPng = $"http://www.spore.com/static/thumb/{subId1}/{subId2}/{subId3}/{Id}.png";
