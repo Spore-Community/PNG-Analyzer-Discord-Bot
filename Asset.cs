@@ -71,10 +71,10 @@ namespace DiscordBot
 
                     var nameLength = Convert.ToInt32(ReadAssetData(reader, 2), 16);
                     name = ReadAssetData(reader, nameLength);
-                    
+
                     var descLength = Convert.ToInt32(ReadAssetData(reader, 3), 16);
                     desc = ReadAssetData(reader, descLength);
-                    
+
                     var tagsLength = Convert.ToInt32(ReadAssetData(reader, 2), 16);
                     tags = ReadAssetData(reader, tagsLength);
 
@@ -92,7 +92,7 @@ namespace DiscordBot
             }
             //catch (Exception)
             {
-                
+
             }
         }
 
@@ -130,13 +130,35 @@ namespace DiscordBot
             var original = Parent>0 ? "*Edited Creation*\n" : "";
             var desc = Description.Length>0 ? Description+"\n" : "";
             var tags = Tags.Length>0 ? " - Tags: "+Tags : "";
-            
+
             return $"**{Name}** by {Author}\n{desc}*{PartCount} parts{tags}*\n{original}{url}";
         }
 
         public string getInfoAdvanced()
         {
             return $"Asset ID: {Id}\nAuthor ID: {AuthorId}\nCreated: {Created}\nParent Asset: {Parent}\nPart Count: {PartCount}\nPNG version: {version}\nType ID: {typeId}\nGroup ID: {groupId}\nInstance ID: {instanceId}\nMachine ID: {machineId}";
+        }
+
+        public string getApiUrls()
+        {
+            var assetInfo = "http://www.spore.com/rest/asset/" + Id;
+            var creatureStats = "http://www.spore.com/rest/creature/" + Id;
+
+            var subId1 = Id.ToString().Substring(0,3);
+            var subId2 = Id.ToString().Substring(3,6);
+            var subId3 = Id.ToString().Substring(6,9);
+            var xmlModel = $"http://www.spore.com/static/model/{subId1}/{subId2}/{subId3}/{Id}.xml";
+            var largePng = $"http://www.spore.com/static/image/{subId1}/{subId2}/{subId3}/{Id}_lrg.png";
+            var smallPng = $"http://www.spore.com/static/thumb/{subId1}/{subId2}/{subId3}/{Id}.png";
+
+            return $"Asset Info: {assetInfo}\nCreature Stats: {creatureStats}\nXML Model: {xmlModel}\nLarge PNG: {largePng}\nSmall PNG: {smallPng}";
+        }
+
+        public string getPollinatorUrls()
+        {
+            var pollinatorUrl = "http://pollinator.spore.com/pollinator/admin/asset/" + Id;
+            var validityUrl = "http://pollinator.spore.com/pollinator/admin/validation/" + Id;
+            return $"Pollinator URL: {pollinatorUrl}\nTest Validity: {validityUrl}";
         }
 
     }

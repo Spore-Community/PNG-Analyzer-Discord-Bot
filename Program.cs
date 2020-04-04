@@ -58,6 +58,8 @@ namespace DiscordBot
                         await message.Channel.SendMessageAsync(asset.getInfo());
                         if(message.Content.Contains("!xml")) await message.Channel.SendFileAsync(filePath+".xml");
                         if(message.Content.Contains("!advanced")) await message.Channel.SendMessageAsync(asset.getInfoAdvanced());
+                        if(message.Content.Contains("!api")) await message.Channel.SendMessageAsync(asset.getApiUrls());
+                        if(message.Content.Contains("!pollinator")) await message.Channel.SendMessageAsync(asset.getPollinatorUrls());
                     }
                     catch{
                         await message.Channel.SendMessageAsync($"That creation couldn't be recognized.");
